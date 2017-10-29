@@ -1,0 +1,85 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+
+apply from: rootProject.file('tools/lint.gradle')
+apply from: rootProject.file('tools/ci-functions.gradle')
+
+retrolambda {
+  jvmArgs '-noverify'
+}
+
+configurations.all {
+  resolutionStrategy {
+    force rootProject.ext.javaPoet
+    force rootProject.ext.guava
+  }
+}
+
+android {
+  compileSdkVersion rootProject.ext.targetSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  dexOptions {
+    maxProcessCount 2
+    javaMaxHeapSize "2g"
+  }
+
+  defaultConfig {
+    applicationId "ru.rinekri.udacitypopularmovies"
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode 1
+    versionName "2.0"
+    signingConfig signingConfigs.debug
+    multiDexEnabled true
+
+    buildConfigField 'String', 'API_BASE_URL', '"https://api.themoviedb.org"'
+    buildConfigField 'String', 'IMAGE_STORE_BASE_URL', '"http://image.tmdb.org"'
+    buildConfigField 'String', 'DB_MOVIE_API_KEY', '"' + getApiKey() + '"'
+  }
+
+  signingConfigs {
+    debug {
+      storeFile file("$rootProject.rootDir/keystore/debug.keystore")
+    }
+  }
+
+  buildTypes {
+    debug {
+      versionNameSuffix '.debug'
+      minifyEnabled false
+      resValue 'string', 'app_name', "$rootProject.ext.appName (debug)"
+    }
+    release {
+      minifyEnabled false
+      resValue 'string', 'app_name', "$rootProject.ext.appName"
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  dataBinding {
+    enabled = true
+  }
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile rootProject.ext.coreDepends
+  compile rootProject.ext.supportLibDepends
+  compile rootProject.ext.otherDepends
+  compile rootProject.ext.streamsBackportDepends
+  annotationProcessor rootProject.ext.javaPoet
+  annotationProcessor rootProject.ext.aptDepends
+  provided rootProject.ext.providedDepends
+  compile 'com.android.support:multidex:1.0.1'
+
+  debugCompile rootProject.ext.leakCanary
+  releaseCompile rootProject.ext.leakCanaryNoOp
+
+  testCompile 'junit:junit:4.12'
+}

@@ -1,0 +1,19 @@
+ext {
+  isCIBuild = {
+    def s = System.getenv("CI")
+    return s != null && !s.empty
+  }
+
+  getApiKey = {
+    if (!isCIBuild()) {
+      println("note: running outside of CI environment, using hardcoded local value, edit manually if needed")
+      return property("THE_MOVIE_DB_API_KEY")
+    } else {
+      def apiKey = System.getenv("THE_MOVIE_DB_API_KEY")
+      if (apiKey == null) {
+        throw new GradleScriptException("expected to find a non empty THE_MOVIE_DB_API_KEY env variable", null)
+      }
+      return apiKey
+    }
+  }
+}
