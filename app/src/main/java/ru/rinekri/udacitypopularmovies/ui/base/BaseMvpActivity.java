@@ -23,8 +23,6 @@ import ru.rinekri.udacitypopularmovies.ui.base.models.ErrorConfig;
 import ru.rinekri.udacitypopularmovies.ui.utils.ViewUtils;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 abstract public class BaseMvpActivity<D> extends MvpAppCompatActivity implements BaseMvpView<D> {
@@ -56,7 +54,7 @@ abstract public class BaseMvpActivity<D> extends MvpAppCompatActivity implements
   @SuppressWarnings("ConstantConditions")
   private void initActionBar(ActivityConfig config) {
     //TODO: Transfer Toolbar and AppBar from each layout to shell
-    toolbar = ButterKnife.findById(this, R.id.toolbar);
+    toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
     final ActionBar ab = getSupportActionBar();
@@ -74,10 +72,10 @@ abstract public class BaseMvpActivity<D> extends MvpAppCompatActivity implements
   }
 
   private void initElceViews(ActivityConfig config) {
-    emptyView = ButterKnife.findById(this, config.elceEmptyViewId());
-    errorView = ButterKnife.findById(this, config.elceErrorViewId());
-    progressView = ButterKnife.findById(this, config.elceProgressViewId());
-    contentView = ButterKnife.findById(this, config.contentContainerId());
+    emptyView = findViewById(config.elceEmptyViewId());
+    errorView = findViewById(config.elceErrorViewId());
+    progressView = findViewById(config.elceProgressViewId());
+    contentView = findViewById(config.contentContainerId());
     Integer gravity;
     if (config.alignElceCenter()) {
       gravity = Gravity.CENTER;
