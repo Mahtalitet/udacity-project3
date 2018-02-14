@@ -37,6 +37,7 @@ public abstract class MovieInfo implements Parcelable {
   @Json(name = "backdrop_path")
   @BackdropUrlAdapter.Annotation
   public abstract String backdropUrl();
+  @Nullable
   public abstract String popularity();
   @Json(name = "vote_count")
   public abstract String voteCount();

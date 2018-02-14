@@ -1,12 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 
 apply from: rootProject.file('tools/lint.gradle')
 apply from: rootProject.file('tools/ci-functions.gradle')
-
-retrolambda {
-  jvmArgs '-noverify'
-}
 
 configurations.all {
   resolutionStrategy {
@@ -68,18 +63,22 @@ android {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile rootProject.ext.coreDepends
-  compile rootProject.ext.supportLibDepends
-  compile rootProject.ext.otherDepends
-  compile rootProject.ext.streamsBackportDepends
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+  implementation rootProject.ext.coreDepends
+  implementation rootProject.ext.supportLibDepends
+  implementation rootProject.ext.otherDepends
+  implementation rootProject.ext.streamsBackportDepends
+  implementation rootProject.ext.multidex
+  implementation rootProject.ext.guava
+
+  debugImplementation rootProject.ext.leakCanary
+  releaseImplementation rootProject.ext.leakCanaryNoOp
+
+  compileOnly rootProject.ext.providedDepends
+  compileOnly rootProject.ext.compileOnlyDepends
+
   annotationProcessor rootProject.ext.javaPoet
   annotationProcessor rootProject.ext.aptDepends
-  provided rootProject.ext.providedDepends
-  compile 'com.android.support:multidex:1.0.1'
-
-  debugCompile rootProject.ext.leakCanary
-  releaseCompile rootProject.ext.leakCanaryNoOp
 
   testCompile 'junit:junit:4.12'
 }

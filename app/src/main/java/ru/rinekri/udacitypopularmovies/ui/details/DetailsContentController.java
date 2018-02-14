@@ -45,7 +45,7 @@ class DetailsContentController extends TypedEpoxyController<DetailsMvp.PM> {
   }
 
   @Override
-  protected void onExceptionSwallowed(RuntimeException exception) {
+  protected void onExceptionSwallowed(@NonNull RuntimeException exception) {
     throw exception;
   }
 
